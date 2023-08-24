@@ -1,5 +1,5 @@
 import React, { Component, Fragment  } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Search from "./components/Search";
 import PageLinks from "./components/PageLinks";
 import Users from "./components/Users";
+import User from "./components/User";
 
 export class App extends Component {
   constructor(props) {
@@ -20,6 +21,8 @@ export class App extends Component {
       total: 0,
       pages: [],
       users: [],
+      user: null,
+      repos: [],
     }
   }
 
@@ -73,14 +76,43 @@ export class App extends Component {
     await this.searchUsers(this.state.query, current);
   }
 
+  getUser = async (username ) => {
+    this.setState({
+      loading: true,
+    });
+
+    const res = await axios.get(`https://api.github.com/users/${username}`);
+
+    this.setState({
+      loading: false,
+      user: res.data
+    });
+  }
+
+  getUserRepos = async (username ) => {
+    this.setState({
+      loading: true,
+    });
+
+    const res = await axios.get(`https://api.github.com/users/${username}/repos`);
+
+    this.setState({
+      loading: false,
+      repos: res.data
+    });
+  }
+
   render() {
     const {
       alert,
       loading,
+      query,
       current,
       total,
       pages,
-      users
+      users,
+      user,
+      repos
     } = this.state;
 
     return (
@@ -96,50 +128,68 @@ export class App extends Component {
               </div>
             )}
 
-            <Route
-              exact
-              path="/"
-              render={() => (
-                <Fragment>
-                  <Search
-                    setAlert={this.showAlert}
-                    searchUsers={this.searchUsers}
-                  />
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={() => (
+                  <Fragment>
+                    <Search
+                      query={query}
+                      setAlert={this.showAlert}
+                      searchUsers={this.searchUsers}
+                    />
 
-                  <div className="container">
-                    {loading ? (
-                      <div className="mt-5 d-flex justify-content-center">
-                        <div className="spinner-border" role="status">
-                          <span className="sr-only">Loading...</span>
+                    <div className="container">
+                      {loading ? (
+                        <div className="mt-5 d-flex justify-content-center">
+                          <div className="spinner-border" role="status">
+                            <span className="sr-only">Loading...</span>
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      <Fragment>
-                        {total > 0 && (
-                          <PageLinks
-                            current={current}
-                            last={total}
-                            pages={pages}
-                            handlePagination={this.handlePagination}
-                          />
-                        )}
+                      ) : (
+                        <Fragment>
+                          {total > 0 && (
+                            <PageLinks
+                              current={current}
+                              last={total}
+                              pages={pages}
+                              handlePagination={this.handlePagination}
+                            />
+                          )}
 
-                        <Users users={users} />
+                          <Users users={users} />
 
-                        {total > 0 && (
-                          <PageLinks
-                            current={current}
-                            last={total}
-                            pages={pages}
-                            handlePagination={this.handlePagination}
-                          />
-                        )}
-                      </Fragment>
-                    )}
-                  </div>
-                </Fragment>
-              )}
-            />
+                          {total > 0 && (
+                            <PageLinks
+                              current={current}
+                              last={total}
+                              pages={pages}
+                              handlePagination={this.handlePagination}
+                            />
+                          )}
+                        </Fragment>
+                      )}
+                    </div>
+                  </Fragment>
+                )}
+              />
+
+              <Route
+                exact
+                path="/user/:login"
+                render={props => (
+                  <User
+                    {...props}
+                    loading={loading}
+                    user={user}
+                    repos={repos}
+                    getUser={this.getUser}
+                    getUserRepos={this.getUserRepos}
+                  />
+                )}
+              />
+            </Switch>
           </div>
         </div>
       </Router>

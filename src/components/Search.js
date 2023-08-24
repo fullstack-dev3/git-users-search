@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-const Search = ({ setAlert, searchUsers }) => {
-  const [text, setText] = useState('');
+const Search = ({ query, setAlert, searchUsers }) => {
+  const [text, setText] = useState(query);
  
   const onSubmit = e => {
     e.preventDefault();
