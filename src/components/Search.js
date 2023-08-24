@@ -11,7 +11,6 @@ const Search = ({ setAlert, searchUsers }) => {
       setAlert("Please enter something", "secondary");
     } else {
       searchUsers(text);
-      setText('');
     }
   };
 
