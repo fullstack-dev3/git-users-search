@@ -122,7 +122,7 @@ export class App extends Component {
     return (
       <Router>
         <div className="App">
-          <Navbar icon="fab fa-github" title="Github Finder" />
+          <Navbar icon="fab fa-github" title="Github User Finder" />
 
           <div className="mt-4 col-md-9" style={{ margin: "auto" }}>
             {alert !== null && (
