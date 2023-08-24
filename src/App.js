@@ -31,7 +31,11 @@ export class App extends Component {
       alert: { msg, type }
     });
 
-    setTimeout(() => this.alert = null, 5000);
+    setTimeout(() => (
+      this.setState({
+        alert: null
+      })
+    ), 3000);
   };
 
   searchUsers = async (query, current = 1) => {
