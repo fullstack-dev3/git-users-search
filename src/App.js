@@ -37,14 +37,14 @@ export class App extends Component {
     });
 
     const res = await axios.get(
-      `https://api.github.com/search/users?q=${query}&page=${current}`
+      `https://api.github.com/search/users?q=${query}&page=${current}&per_page=20`
     );
 
     let pages = [];
 
     let total = Math.ceil(res.data.total_count / 30);
-    if (total > 34) {
-      total = 34;
+    if (total > 50) {
+      total = 50;
     }
 
     if (total <= 10) {

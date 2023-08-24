@@ -6,7 +6,7 @@ const Users = ({ users }) => {
   return (
     <div className="row">
       {users.map(user => (
-        <div key={user.id} className="text-center py-3 col-sm-6 col-md-4 col-lg-2">
+        <div key={user.id} className="text-center py-3 col-sm-6 col-md-3">
           <img
             src={user.avatar_url}
             alt=""
